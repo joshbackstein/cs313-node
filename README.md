@@ -1,39 +1,113 @@
-# node-js-getting-started
+# Multiple Node.js projects in a single Heroku repository
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
+This repository is set up according to [this GitHub issue comment](https://github.com/heroku/heroku-buildpack-nodejs/issues/385#issuecomment-291084067).
 
-This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
+## How to use
 
-## Running Locally
+To change the project directory for Heroku to use, edit `set-project-directory.sh` to look like this:
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
+```bash
+#!/bin/sh
 
-```sh
-$ git clone https://github.com/heroku/node-js-getting-started.git # or clone your own fork
-$ cd node-js-getting-started
-$ npm install
-$ npm start
+# Set NPM_PREFIX_DIR
+export NPM_PREFIX_DIR='your-project-directory-here'
 ```
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
-
-## Deploying to Heroku
+In addition to this, your project directory's `package.json` file must contain a `start` script. If you run your project using the command `node index.js`, your `package.json` file should look something like this:
 
 ```
-$ heroku create
-$ git push heroku master
-$ heroku open
+{
+  ... other stuff ...
+  "scripts": {
+    "start": "node index.js",
+    ... other scripts ...
+  },
+  ... other stuff ...
+}
 ```
-or
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+## Example
 
-## Documentation
+Let's make a new project named `cool-web-app`.
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
+First, we need to create and enter the directory for the project. From the root directory of this repository, run the following commands:
 
-- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
+```
+$ mkdir cool-web-app
+$ cd cool-web-app
+```
+
+Next, we need to initialize the project using `npm`. This will prompt you for some information, but you can use the default values if you'd like. It will look something like this:
+
+```
+$ npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help json` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (cool-web-app)
+version: (1.0.0)
+description:
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+author:
+license: (ISC)
+About to write to /home/your-username/cs313-node-multiple-project-example/cool-web-app/package.json:
+
+{
+  "name": "cool-web-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes)
+```
+
+Now that we've used `npm` to create a default `package.json` file for us, we'll need to add a `start` script to it:
+
+```json
+"start": "node index.js"
+```
+
+To do this, add the `start` script to the `scripts` section in your project's `package.json` file like this:
+
+```json
+{
+  "name": "cool-web-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+Finally, you'll need to go back to the root directory of this repository and edit your `set-project-directory.sh` file to look like this:
+
+```bash
+#!/bin/sh
+
+# Set NPM_PREFIX_DIR
+export NPM_PREFIX_DIR='cool-web-app'
+```
+
+That's it! You can now create and edit your project's `index.js` file to start working on your project.
