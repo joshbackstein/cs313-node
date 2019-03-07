@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>09 Prove - Form</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="js/script.js"></script>
+  </head>
+  <body>
+    <form action="/get-rate" method="get">
+      <h1>Mail Information</h1>
+      <p id="message"></p>
+      <label for="mail-weight">Mail Weight (oz):</label>
+      <br>
+      <input type="text" id="mail-weight" name="mail_weight" placeholder="Enter weight" oninput="checkWeight()" autofocus>
+      <br>
+      <br>
+      <label for="mail-type">Mail Type:</label>
+      <br>
+      <select id="mail-type" name="mail_type" oninput="checkWeight()">
+        <option value="letters-stamped">Letters (Stamped)</option>
+        <option value="letters-metered">Letters (Metered)</option>
+        <option value="large-envelopes">Large Envelopes (Flats)</option>
+        <option value="first-class-package">First-Class Package Service&mdash;Retail</option>
+      </select>
+      <br>
+      <br>
+      <input type="submit" id="submit-button" value="Submit" disabled>
+    </form>
+  </body>
+</html>
